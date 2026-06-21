@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: casino-platform-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: casino_app
+      POSTGRES_PASSWORD: casino_local_password
+      POSTGRES_DB: casino_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - casino_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U casino_app -d casino_platform"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  casino_postgres_data:
